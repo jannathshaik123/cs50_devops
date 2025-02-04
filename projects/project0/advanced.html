@@ -14,6 +14,13 @@
       .navbar-nav {
         margin-left: auto;
       }
+      input {
+        border-radius: 25px;
+        min-height: 35px;
+        border-color: aliceblue;
+        padding-left: 15px;
+        padding-bottom: 5px;
+      }
     </style>
   </head>
   <body>
@@ -26,68 +33,109 @@
         </ul>
       </nav>
     </div>
-    <form action="https://www.google.com/search">
+    <div class="display-6 m-3" style="color: maroon">Google Advanced</div>
+    <!-- <form action="https://www.google.com/search">
       <input type="text" name="q" />
       <input type="submit" value="Google Search" />
+    </form> -->
+    <hr style="width: 100%" />
+    <b class="m-3">Find pages with: </b>
+    <form class="m-3" action="https://www.google.com/search">
+      <!-- as_q=123&as_epq=456&as_oq=789&as_eq=1234&as_nlo=456&as_nhi=789 -->
+      <div class="form-group row mb-3">
+        <label
+          for="inputAdvanceSearch1"
+          class="col-6 col-md-4 col-lg-3 colcol-form-label"
+          >all these words:</label
+        >
+        <div class="col-6 col-md-6 col-lg-4">
+          <input
+            type="text"
+            class="form-control"
+            name="as_q"
+            id="inputAdvanceSearch1"
+          />
+        </div>
+      </div>
+      <div class="form-group row mb-3">
+        <label
+          for="inputAdvanceSearch2"
+          class="col-6 col-md-4 col-lg-3 col-form-label"
+          >this exact word or phrase:</label
+        >
+        <div class="col-6 col-md-6 col-lg-4">
+          <input
+            type="text"
+            class="form-control"
+            name="as_epq"
+            id="inputAdvanceSearch2"
+          />
+        </div>
+      </div>
+      <div class="form-group row mb-3">
+        <label
+          for="inputAdvanceSearch3"
+          class="col-6 col-md-4 col-lg-3 col-form-label"
+          >any of these words:</label
+        >
+        <div class="col-6 col-md-6 col-lg-4">
+          <input
+            type="text"
+            class="form-control"
+            name="as_oq"
+            id="inputAdvanceSearch3"
+          />
+        </div>
+      </div>
+      <div class="form-group row mb-3">
+        <label
+          for="inputAdvanceSearch4"
+          class="col-6 col-md-4 col-lg-3 col-form-label"
+          >none of these words:</label
+        >
+        <div class="col-6 col-md-6 col-lg-4">
+          <input
+            type="text"
+            class="form-control"
+            name="as_eq"
+            id="inputAdvanceSearch4"
+          />
+        </div>
+      </div>
+      <div class="form-group row mb-3">
+        <label
+          for="inputAdvanceSearch5-1"
+          class="col-6 col-md-4 col-lg-3 col-form-label"
+          >numbers ranging from:</label
+        >
+        <div class="col-3 col-md-3 col-lg-2">
+          <input
+            type="text"
+            class="form-control"
+            name="as_nlo"
+            id="inputAdvanceSearch5-1"
+          />
+        </div>
+        <!-- <label for="inputAdvanceSearch5-2" class="col-1 col-md-1 col-lg-1 col-form-label"
+          >to</label
+        > -->
+        to
+        <div class="col-2 col-md-3 col-lg-2">
+          <input
+            type="text"
+            class="form-control"
+            name="as_nhi"
+            id="inputAdvanceSearch5-2"
+          />
+        </div>
+      </div>
+      <div class="col-12">
+        <input type="submit" value="Advanced Search" class="btn btn-primary" />
+      </div>
     </form>
-    <form class="m-5">
-      <div class="form-group row">
-        <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
-        <div class="col-sm-10">
-          <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
-        </div>
-      </div>
-      <div class="form-group row">
-        <label for="inputPassword3" class="col-sm-2 col-form-label">Password</label>
-        <div class="col-sm-10">
-          <input type="password" class="form-control" id="inputPassword3" placeholder="Password">
-        </div>
-      </div>
-      <fieldset class="form-group">
-        <div class="row">
-          <legend class="col-form-label col-sm-2 pt-0">Radios</legend>
-          <div class="col-sm-10">
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="option1" checked>
-              <label class="form-check-label" for="gridRadios1">
-                First radio
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="option2">
-              <label class="form-check-label" for="gridRadios2">
-                Second radio
-              </label>
-            </div>
-            <div class="form-check disabled">
-              <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios3" value="option3" disabled>
-              <label class="form-check-label" for="gridRadios3">
-                Third disabled radio
-              </label>
-            </div>
-          </div>
-        </div>
-      </fieldset>
-      <div class="form-group row">
-        <div class="col-sm-2">Checkbox</div>
-        <div class="col-sm-10">
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="gridCheck1">
-            <label class="form-check-label" for="gridCheck1">
-              Example checkbox
-            </label>
-          </div>
-        </div>
-      </div>
-      <div class="form-group row">
-        <div class="col-sm-10">
-          <button type="submit" class="btn btn-primary">Sign in</button>
-        </div>
-      </div>
-    </form>
-    <form action="https://www.google.com/search">
+    <!-- <form action="https://www.google.com/search">
       <input type="text" name="q" />
-      <input type="submit" value="Google Search" />
-    </form>
+      <input type="submit" value="Advanced Search" />
+    </form> -->
   </body>
 </html>
