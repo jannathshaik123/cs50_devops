@@ -3,10 +3,10 @@ import os
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 
-import django
-django.setup()
+# import django
+# django.setup()
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'wiki.settings.py')
+# os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'wiki.settings.py')
 
 
 def list_entries():
