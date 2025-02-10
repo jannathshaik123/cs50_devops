@@ -1,7 +1,12 @@
 import re
-
+import os
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
+
+import django
+django.setup()
+
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'wiki.settings.py')
 
 
 def list_entries():
@@ -31,7 +36,8 @@ def get_entry(title):
     entry exists, the function returns None.
     """
     try:
-        f = default_storage.open(f"entries/{title}.md")
+        f = default_storage.open(f"./entries/{title}.md")
+        print(f)
         return f.read().decode("utf-8")
     except FileNotFoundError:
         return None
