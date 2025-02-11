@@ -1,5 +1,5 @@
 {% extends "encyclopedia/layout.html" %}{% block title %} {{ title }}
-{%endblock%} {% block body %} {% if isEmpty%}
+{%endblock%} {% block body %} {% if isEmpty == "True"%}
 <h1>{{content}}</h1>
 {% else %}
 <h1>Edit Page</h1>
@@ -14,7 +14,8 @@
     rows="10"
     placeholder="Write page content in markdown"
   >
-{%if content%}{{content|safe}}{%endif%}</textarea
+{%if content%}{{content|safe}}
+{%endif%}</textarea
   >
   <input type="submit" value="Save" class="btn btn-success my-3" />
 </form>

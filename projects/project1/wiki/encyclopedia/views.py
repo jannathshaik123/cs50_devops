@@ -24,20 +24,27 @@ def entry(request,title):
     })
 
 def edit(request,title):
+    isEmpty = "False"
     content = util.get_entry(title)
-    if util.get_entry(title) == None:
-        content = "## 404: Page was not found"
     if request.method == "POST":
-        content = request.POST.get('content')
-        if content == "":
-            return render(request, "encyclopedia\edit.html", {
+        try:
+            content = request.POST.get('content', None).strip()
+            if not content:
+                raise ValueError("Content cannot be empty")
+        except (AttributeError, ValueError) as e:
+            print(f"entering except block: {e}")
+            return render(request, "encyclopedia/edit.html", {
                 "title": title,
-                "content": markdown("## Content cannot be empty"),
-                "isEmpty": 
-                    True}),
+                "content": "Content cannot be empty",
+                "isEmpty": "True"
+            })
         util.save_entry(title,content)
         return HttpResponseRedirect(reverse("encyclopedia:entry", args=[title]))
+        
+    if content == None:
+        content = "404: Page was not found"
+        isEmpty = "True"
     return render(request, "encyclopedia\edit.html", {
         "title": title,
         "content": content,
-        "isEmpty": False})
+        "isEmpty": isEmpty})
