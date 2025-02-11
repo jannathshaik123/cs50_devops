@@ -5,7 +5,6 @@
 <h1>Edit Page</h1>
 <form action="{% url 'encyclopedia:edit' title %}" method="post">
   {% csrf_token %}
-  <label for="content">Content</label>
   <textarea
     class="form-control"
     id="content"
