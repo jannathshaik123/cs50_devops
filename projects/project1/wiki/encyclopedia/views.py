@@ -4,7 +4,7 @@ from . import util
 from django import forms
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-import time
+from random import randint
 
 class NewPageForm(forms.Form): 
     title = forms.CharField(widget=forms.TextInput, label="Title",required=True)
@@ -16,12 +16,15 @@ def index(request):
 
 def entry(request,title):
     content = util.get_entry(title)
+    notFound = "False"
     if content == None:
         content = "## Page was not found"
+        notFound = "True"
     content = markdown(content)
     return render(request, "encyclopedia\entry.html", {
         "title": title,
         "content": content,
+        "notFound": notFound
     })
 
 def edit(request,title):
@@ -56,12 +59,19 @@ def new(request):
         if form.is_valid():
             title = form.cleaned_data["title"]
             util.save_entry(title,f"#{title}")
-            request.method = "GET"
-            return edit(request,title)
+            # request.method = "GET"
+            # return edit(request,title)
+            return HttpResponseRedirect(reverse("encyclopedia:edit", args=[title]))
         # check if the form is not valid
         else:
             return render(request,r"encyclopedia\new.html", {
                 "form" : form})
     return render(request,r"encyclopedia\new.html", {
                 "form" : NewPageForm()})
+
+def random_page(request):
+    if len(util.list_entries())!=0:
+        num = randint(0,len(util.list_entries())-1)
+        page = util.list_entries()[num]
+    return HttpResponseRedirect(reverse("encyclopedia:entry", args=[page]))
     
