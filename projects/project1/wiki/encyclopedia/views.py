@@ -19,19 +19,25 @@ def entry(request,title):
         content = "## Page was not found"
     content = markdown(content)
     return render(request, "encyclopedia\entry.html", {
+        "title": title,
         "content": content,
     })
 
 def edit(request,title):
+    content = util.get_entry(title)
     if util.get_entry(title) == None:
-        content = "## Page was not found"
+        content = "## 404: Page was not found"
     if request.method == "POST":
-        content = request.POST.get(util.get_entry(title))
+        content = request.POST.get('content')
         if content == "":
             return render(request, "encyclopedia\edit.html", {
-                "content": markdown("## Content cannot be empty")}),
+                "title": title,
+                "content": markdown("## Content cannot be empty"),
+                "isEmpty": 
+                    True}),
         util.save_entry(title,content)
-        return HttpResponseRedirect(reverse("wiki:entry", args=(title,)))
-    content = util.get_entry(title)
+        return HttpResponseRedirect(reverse("encyclopedia:entry", args=[title]))
     return render(request, "encyclopedia\edit.html", {
-        "content": markdown(content)})
+        "title": title,
+        "content": content,
+        "isEmpty": False})

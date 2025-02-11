@@ -1,4 +1,6 @@
 {% extends "encyclopedia/layout.html" %} {% block title %} {{ title }}
 {%endblock%} {% block body %} {{ content|safe }}
-<button>Edit</button>
+<button onclick="window.location.href='{% url 'encyclopedia:edit' title %}'">
+  Edit
+</button>
 {% endblock %}

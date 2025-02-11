@@ -1,8 +1,21 @@
 {% extends "encyclopedia/layout.html" %}{% block title %} {{ title }}
-{%endblock%} {% block body %}
-<form method="post">
-  {% csrf_token %} {{ content|safe }} {% comment %}
-  <input type="text" name="task" placeholder="Task" /> {% endcomment %}
-  <input type="submit" value="Add" />
+{%endblock%} {% block body %} {% if isEmpty%}
+<h1>{{content}}</h1>
+{% else %}
+<h1>Edit Page</h1>
+<form action="{% url 'encyclopedia:edit' title %}" method="post">
+  {% csrf_token %}
+  <label for="content">Content</label>
+  <textarea
+    class="form-control"
+    id="content"
+    cols="30"
+    name="content"
+    rows="10"
+    placeholder="Write page content in markdown"
+  >
+{%if content%}{{content|safe}}{%endif%}</textarea
+  >
+  <input type="submit" value="Save" class="btn btn-success my-3" />
 </form>
-{% endblock %}
+{% endif %} {% endblock %}
