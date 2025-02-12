@@ -74,4 +74,17 @@ def random_page(request):
         num = randint(0,len(util.list_entries())-1)
         page = util.list_entries()[num]
     return HttpResponseRedirect(reverse("encyclopedia:entry", args=[page]))
-    
+
+def search(request):
+    if request.method == 'GET':
+        try:
+            name = request.GET.get('q').strip()
+            if not name:
+                raise ValueError("Content cannot be empty")
+        except (AttributeError, ValueError):
+            return render(request, "encyclopedia/entry.html", {
+                "title": name,
+                "content": markdown("##Search cannot be empty"),
+                "isEmpty": "True"
+            })
+        return HttpResponseRedirect(reverse("encyclopedia:entry", args=[name]))
