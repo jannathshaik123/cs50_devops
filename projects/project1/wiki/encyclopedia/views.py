@@ -10,7 +10,7 @@ class NewPageForm(forms.Form):
     title = forms.CharField(widget=forms.TextInput, label="Title",required=True)
 
 def index(request):
-    return render(request, "encyclopedia\index.html", {
+    return render(request, "encyclopedia/index.html", {
         "entries": util.list_entries()
     })
 
@@ -21,7 +21,7 @@ def entry(request,title):
         content = "## Page was not found"
         notFound = "True"
     content = markdown(content)
-    return render(request, "encyclopedia\entry.html", {
+    return render(request, "encyclopedia/entry.html", {
         "title": title,
         "content": content,
         "notFound": notFound
@@ -43,11 +43,11 @@ def edit(request,title):
         util.save_entry(title,content)
         return HttpResponseRedirect(reverse("encyclopedia:entry", args=[title]))
     if content == None:
-        return render(request, "encyclopedia\edit.html", {
+        return render(request, "encyclopedia/edit.html", {
         "title": title,
         "content": "404: Page was not found",
         "isEmpty": "True"})
-    return render(request, "encyclopedia\edit.html", {
+    return render(request, "encyclopedia/edit.html", {
         "title": title,
         "content": content,
         "isEmpty": "False"})
@@ -64,9 +64,9 @@ def new(request):
             return HttpResponseRedirect(reverse("encyclopedia:edit", args=[title]))
         # check if the form is not valid
         else:
-            return render(request,r"encyclopedia\new.html", {
+            return render(request,r"encyclopedia/new.html", {
                 "form" : form})
-    return render(request,r"encyclopedia\new.html", {
+    return render(request,r"encyclopedia/new.html", {
                 "form" : NewPageForm()})
 
 def random_page(request):
