@@ -4,4 +4,7 @@ from . import views
 app_name = "flights"
 
 
-urlpatterns = []
+urlpatterns = [
+    path("", views.index, name="index"),
+    path("<int:flight_id>", views.flight, name="flight")
+]
