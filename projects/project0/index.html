@@ -41,13 +41,17 @@
           alt="Google Logo"
         />
       </div>
-      <form action="https://www.google.com/search">
+      <form target="_blank" action="https://www.google.com/search">
         <div class="container-fluid text-center form-row mb-3">
           <input type="text" name="q" class="col-4" />
         </div>
         <div class="container-fluid text-center form-row">
           <input type="submit" value="Google Search" /> &nbsp;
-          <input type="submit" value="I'm Feeling Lucky" />
+          <input
+            type="submit"
+            value="I'm Feeling Lucky"
+            onclick="window.location.href = 'https://doodles.google/';"
+          />
         </div>
       </form>
     </div>

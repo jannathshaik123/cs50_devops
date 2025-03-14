@@ -1,11 +1,9 @@
-{% extends "tasks/layout.html" %}
-{% block body %}
-    <h1>Add Tasks</h1>
-    <form  action="{% url 'tasks:add_tasks'%}" method="post">
-        {% csrf_token %}
-        {% comment %} <input type="text" name="task" placeholder="Task"> {% endcomment %}
-        {{form}}
-        <input type="submit" value="Add">
-    </form>
-    <a href="{% url 'tasks:index' %}">Back</a>
+{% extends "tasks/layout.html" %} {% block body %}
+<h1>Add Tasks</h1>
+<form action="{% url 'tasks:add_tasks'%}" method="post">
+  {% csrf_token %} {% comment %}
+  <input type="text" name="task" placeholder="Task" /> {% endcomment %} {{form}}
+  <input type="submit" value="Add" />
+</form>
+<a href="{% url 'tasks:index' %}">Back</a>
 {% endblock %}
