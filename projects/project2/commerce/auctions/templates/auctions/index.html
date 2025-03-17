@@ -1,23 +1,34 @@
 {% extends "auctions/layout.html" %} {% block body %}
 <h2>Active Listings</h2>
-{% for active_listing in active_listings %}
-<div class="card">
-  <div class="card-body">
-    <h5 class="card-title">
-      {% comment %}
-      <a href="{% url 'listing' listing.id %}">{{ listing.title }}</a>
-      {%endcomment%} {{ active_listing.title }}
-    </h5>
+<div class="card-deck">
+  {% for active_listing in active_listings %}
+  <div class="card">
     <img
       src="{{ active_listing.image }}"
-      class="card-img-top embed-responsive-item"
-      alt="..."
+      class="card-img-top"
+      alt="Listing Image"
     />
-    <p class="card-text">{{ active_listing.description }}</p>
-    <p class="card-text">Price: ${{ active_listing.starting_bid }}</p>
-    <p class="card-text">Category: {{ active_listing.category }}</p>
-    <p class="card-text">Created by: {{ active_listing.owner}}</p>
+    <div class="card-body">
+      <a href="{% url 'listing' active_listing.id %}">
+        <h5 class="card-title">{{ active_listing.title }}</h5>
+      </a>
+      <p class="card-text">{{ active_listing.description }}</p>
+      <p class="card-text">
+        <strong>Starting Price:</strong> ${{ active_listing.starting_bid }}
+      </p>
+      <p class="card-text">
+        <strong>Category:</strong> {{ active_listing.category }}
+      </p>
+      <p class="card-text">
+        <strong>Created by:</strong> {{ active_listing.owner }}
+      </p>
+    </div>
+    <div class="card-footer">
+      <small class="text-muted"
+        >Max bid placed ${{ active_listing.max_bid}}</small
+      >
+    </div>
   </div>
+  {% endfor %}
 </div>
-<br />
-{% endfor %} {% endblock %}
+{% endblock %}

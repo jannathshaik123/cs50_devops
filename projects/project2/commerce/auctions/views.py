@@ -3,6 +3,7 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from django.contrib.auth.decorators import login_required
 
 from .models import User, AuctionListing, Bid, Comment, Watchlist , Category
 
@@ -62,3 +63,24 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "auctions/register.html")
+    
+@login_required(login_url="/login")    
+def listing(request, listing_id):
+    listing = AuctionListing.objects.get(pk=listing_id)
+    if request.method == "POST":
+        if "comment" in request.POST:
+            text = request.POST["comment"]
+            Comment.objects.create(text=text, user=request.user, item=listing)
+        elif "bid" in request.POST:
+            amount = request.POST["bid"]
+            if float(amount) > listing.max_bid_amount():
+                listing.max_bid = amount
+                listing.max_bidder = request.user
+                listing.save()
+                Bid.objects.create(amount=amount, bidder=request.user, item_bid_on=listing)
+    return render(request, "auctions/listing.html", {
+        "listing": listing,
+        "max_bid": listing.max_bid_amount(),
+        "user": request.user,
+        "comments": Comment.objects.filter(item=listing)
+    })

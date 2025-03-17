@@ -1,0 +1,183 @@
+{% extends "auctions/layout.html" %} {% block head %}
+<title>{{ listing.title }}</title>
+<style>
+  .card {
+    flex-direction: row;
+    align-items: center;
+  }
+  .card-title {
+    font-weight: bold;
+  }
+  .card img.fixed-img {
+    width: 300px;
+    height: 200px;
+    object-fit: cover;
+    border-top-right-radius: 0;
+    border-bottom-left-radius: calc(0.25rem - 1px);
+  }
+  .card-text .text-muted {
+    color: #6c757d;
+    background-color: #f8f9fa;
+    text-align: center;
+    padding: 0.75rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.125);
+    border-radius: 0 0 0.25rem 0.25rem;
+  }
+  .comment-section {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 15px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .comment-box {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    transition: transform 0.2s;
+    border: 1px solid #e9ecef;
+  }
+
+  .comment-box:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .user-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .comment-input {
+    border-radius: 20px;
+    padding: 15px 20px;
+    border: 2px solid #e9ecef;
+    transition: all 0.3s;
+  }
+
+  .comment-input:focus {
+    box-shadow: none;
+    border-color: #86b7fe;
+  }
+
+  .btn-comment {
+    border-radius: 20px;
+    padding: 8px 25px;
+    background: #0d6efd;
+    border: none;
+    transition: all 0.3s;
+  }
+
+  .btn-comment:hover {
+    background: #0b5ed7;
+    transform: translateY(-1px);
+  }
+
+  .comment-time {
+    color: #adb5bd;
+    font-size: 0.85rem;
+  }
+
+  @media only screen and (max-width: 768px) {
+    a {
+      display: none;
+    }
+    .card-body {
+      padding: 0.5em 1.2em;
+    }
+    .card-body .card-text {
+      margin: 0;
+    }
+    .card img.fixed-img {
+      width: 100%;
+      height: auto;
+    }
+  }
+  @media only screen and (max-width: 1200px) {
+    .card img.fixed-img {
+      width: 40%;
+    }
+  }
+</style>
+{% endblock %} {% block body %}
+<h2>{{ listing.title }}</h2>
+<div class="card-deck">
+  <div class="card">
+    <img
+      src="{{ listing.image }}"
+      class="card-img-top fixed-img"
+      alt="Listing Image"
+    />
+    <div class="card-body">
+      <p class="card-text">{{ listing.description }}</p>
+      <p class="card-text"><strong>Price:</strong> ${{ max_bid }}</p>
+      <p class="card-text"><strong>Category:</strong> {{ listing.category }}</p>
+      <p class="card-text"><strong>Created by:</strong> {{ listing.owner }}</p>
+
+      {% if not listing.active %} {% comment %}
+      <div class="card-footer text-muted">
+        {% endcomment %}
+        <small class="card-footer text-muted"
+          >Item Sold to {{ listing.max_bidder }} at ${{ max_bid }}</small
+        >
+        {% comment %}
+      </div>
+      {% endcomment %} {% endif %}
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="comment-section">
+    <!-- New Comment Form -->
+    <form action="{% url 'listing' listing.id %}" method="post">
+      {% csrf_token %}
+      <div class="mb-4">
+        <div class="d-flex gap-3">
+          <img src={{"user.image"}} alt="User Avatar" class="user-avatar">
+          <div class="flex-grow-1">
+            <input
+              type="text"
+              class="form-control comment-input"
+              rows="3"
+              placeholder="Write a comment..."
+              name="comment"
+              id="comment"
+            />
+            <div class="mt-3 text-end">
+              <button type="submit" class="btn btn-comment text-white">
+                Post Comment
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <!-- Comments List -->
+    <div class="comments-list">
+      {% for comment in comments %}
+      <!-- Comment 2 -->
+      <div class="comment-box">
+        <div class="d-flex gap-3">
+          <img src={{"comment.user.image"}} alt="User Avatar"
+          class="user-avatar" />
+          <div class="flex-grow-1">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <h6 class="mb-0">{{comment.user.username}}</h6>
+              <span class="comment-time">{{comment.timepost}}</span>
+            </div>
+            <p class="mb-2">{{comment.text}}</p>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}
