@@ -86,9 +86,14 @@ def listing(request, listing_id):
     })
 
 @login_required(login_url="/login") 
-def closed(request):
+def close(request):
     if request.method == "POST":
         listing = AuctionListing.objects.get(pk=request.POST["listing"])
+        if listing.max_bid == 0:
+            return render(request, "auctions/listing.html", {
+                "listing": listing,
+                "message": "You cannot close an auction without any bids.",
+            })
         ## Add code for if there is no bids placed
     return render(request, "auctions/index.html",
                   {"active_listings": AuctionListing.objects.filter(active=False)})

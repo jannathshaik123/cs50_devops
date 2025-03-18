@@ -133,6 +133,9 @@
       {% else %}
         {% if user.username == listing.owner.username %}
           <a href="{% url 'close' listing.id %}" class="btn btn-primary">Close Auction</a>
+          {% if message %}
+            <small class="card-footer text-muted">{{ message }}</small>
+          {% endif %}
         {% else %}
           <form action="{% url 'listing' listing.id %}" method="post">
             {% csrf_token %}
