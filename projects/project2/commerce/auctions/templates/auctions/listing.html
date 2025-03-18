@@ -53,8 +53,9 @@
     object-fit: cover;
   }
 
-  .comment-input {
-    border-radius: 20px;
+  .comment-input,.bid-input {
+    margin: 5px;
+    border-radius: 20px !important;
     padding: 15px 20px;
     border: 2px solid #e9ecef;
     transition: all 0.3s;
@@ -104,6 +105,7 @@
     }
   }
 </style>
+
 {% endblock %} {% block body %}
 <h2>{{ listing.title }}</h2>
 <div class="card-deck">
@@ -119,21 +121,46 @@
       <p class="card-text"><strong>Category:</strong> {{ listing.category }}</p>
       <p class="card-text"><strong>Created by:</strong> {{ listing.owner }}</p>
 
-      {% if not listing.active %} {% comment %}
-      <div class="card-footer text-muted">
-        {% endcomment %}
+      {% if not listing.active %} 
+        {% if user.username == listing.max_bidder.username %}
+        <small class="card-footer text-muted"
+          >Congrats, You have won the auction at ${{ max_bid }}</small>
+        {% else %}
         <small class="card-footer text-muted"
           >Item Sold to {{ listing.max_bidder }} at ${{ max_bid }}</small
         >
-        {% comment %}
-      </div>
-      {% endcomment %} {% endif %}
+        {% endif %}
+      {% else %}
+        {% if user.username == listing.owner.username %}
+          <a href="{% url 'close' listing.id %}" class="btn btn-primary">Close Auction</a>
+        {% else %}
+          <form action="{% url 'listing' listing.id %}" method="post">
+            {% csrf_token %}
+            <div class="input-group mb-3 mt-3 container">
+              <input
+                type="number"
+                class="form-control bid-input col-9"
+                placeholder="Your Bid"
+                name="bid"
+                id="bid"
+              />
+              <button
+                class="btn btn-comment text-white "
+                type="submit"
+                id="button-addon2"
+              >
+                Bid
+              </button>
+            </div>
+        {% endif %}
+      {% endif %}
     </div>
   </div>
 </div>
 
 <div class="container">
   <div class="comment-section">
+    <h3>Comments</h3>
     <!-- New Comment Form -->
     <form action="{% url 'listing' listing.id %}" method="post">
       {% csrf_token %}

@@ -84,3 +84,11 @@ def listing(request, listing_id):
         "user": request.user,
         "comments": Comment.objects.filter(item=listing)
     })
+
+@login_required(login_url="/login") 
+def closed(request):
+    if request.method == "POST":
+        listing = AuctionListing.objects.get(pk=request.POST["listing"])
+        ## Add code for if there is no bids placed
+    return render(request, "auctions/index.html",
+                  {"active_listings": AuctionListing.objects.filter(active=False)})
