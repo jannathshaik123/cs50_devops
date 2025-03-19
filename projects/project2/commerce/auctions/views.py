@@ -1,6 +1,6 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
@@ -9,8 +9,10 @@ from .models import User, AuctionListing, Bid, Comment, Watchlist , Category
 
 
 def index(request):
+    print(request.user)
     return render(request, "auctions/index.html",
-                  {"active_listings": AuctionListing.objects.filter(active=True)})
+                  {"active_listings": AuctionListing.objects.filter(active=True),
+                   "user": request.user})
 
 
 def login_view(request):
@@ -24,7 +26,7 @@ def login_view(request):
         # Check if authentication successful
         if user is not None:
             login(request, user)
-            return HttpResponseRedirect(reverse("index"))
+            return HttpResponseRedirect(reverse("auctions:index"))
         else:
             return render(request, "auctions/login.html", {
                 "message": "Invalid username and/or password."
@@ -32,10 +34,10 @@ def login_view(request):
     else:
         return render(request, "auctions/login.html")
 
-
+@login_required(login_url="auctions/login")
 def logout_view(request):
     logout(request)
-    return HttpResponseRedirect(reverse("index"))
+    return HttpResponseRedirect(reverse("auctions:index"))
 
 
 def register(request):
@@ -60,11 +62,11 @@ def register(request):
                 "message": "Username already taken."
             })
         login(request, user)
-        return HttpResponseRedirect(reverse("index"))
+        return HttpResponseRedirect(reverse("auctions:index"))
     else:
         return render(request, "auctions/register.html")
     
-@login_required(login_url="/login")    
+@login_required(login_url="auctions/login")    
 def listing(request, listing_id):
     message = None
     listing = AuctionListing.objects.get(pk=listing_id)
@@ -72,7 +74,7 @@ def listing(request, listing_id):
         if "comment" in request.POST:
             text = request.POST["comment"]
             Comment.objects.create(text=text, user=request.user, item=listing)
-        elif "bid" in request.POST or "watchlist" not in request.POST:
+        elif "bid" in request.POST and "watchlist" not in request.POST:
             amount = request.POST["bid"]
             if float(amount) > listing.max_bid_amount():
                 message = "Bid placed successfully at"
@@ -84,7 +86,7 @@ def listing(request, listing_id):
                 message = "Your bid must be higher than the current bid at"
         else:
             Watchlist.objects.get_or_create(watcher=request.user, listing=listing)
-            return HttpResponseRedirect(reverse("watchlist"))
+            return HttpResponseRedirect(reverse("auctions:watchlist"))
     return render(request, "auctions/listing.html", {
         "listing": listing,
         "message": message,
@@ -93,7 +95,7 @@ def listing(request, listing_id):
         "comments": Comment.objects.filter(item=listing)
     })
 
-@login_required(login_url="/login") 
+@login_required(login_url="auctions/login") 
 def close(request, listing_id):
     listing = AuctionListing.objects.get(pk=listing_id)
     # try:
@@ -113,11 +115,12 @@ def close(request, listing_id):
                 "comments": Comment.objects.filter(item=listing)
             })
         
-@login_required(login_url="/login")
+@login_required(login_url="auctions/login")
 def watchlist(request):
+    print(request.user)
     if request.method == "POST":
-        Watchlist.objects.get(watcher=request.user, listing=AuctionListing.objects.get(pk=request.POST["listing"])).delete()
-        return HttpResponseRedirect(reverse("watchlist"))
+        Watchlist.objects.get(watcher=request.user, listing=AuctionListing.objects.get(pk=request.POST["listing_id"])).delete()
+        return HttpResponseRedirect(reverse("auctions:watchlist"))
     return render(request, "auctions/watchlist.html", {
         "watchlist": Watchlist.objects.filter(watcher=request.user)
     })

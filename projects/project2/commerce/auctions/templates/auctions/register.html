@@ -6,7 +6,7 @@
 <div>{{ message }}</div>
 {% endif %}
 
-<form action="{% url 'auction:register' %}" method="post">
+<form action="{% url 'auctions:register' %}" method="post">
   {% csrf_token %}
   <div class="form-group">
     <input

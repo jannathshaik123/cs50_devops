@@ -9,9 +9,15 @@
       alt="Listing Image"
     />
     <div class="card-body">
+      {% if user.is_authenticated %}
       <a href="{% url 'auctions:listing' active_listing.id %}">
         <h5 class="card-title">{{ active_listing.title }}</h5>
       </a>
+      {% else %}
+      <a href="{% url 'auctions:login' %}">
+        <h5 class="card-title">{{ active_listing.title }}</h5>
+      </a>
+      {% endif %}
       <p class="card-text">{{ active_listing.description }}</p>
       <p class="card-text">
         <strong>Starting Price:</strong> ${{ active_listing.starting_bid }}
