@@ -9,7 +9,7 @@
       alt="Listing Image"
     />
     <div class="card-body">
-      <a href="{% url 'listing' active_listing.id %}">
+      <a href="{% url 'auctions:listing' active_listing.id %}">
         <h5 class="card-title">{{ active_listing.title }}</h5>
       </a>
       <p class="card-text">{{ active_listing.description }}</p>

@@ -1,0 +1,16 @@
+{%extends "auctions/layout.html" %} {%block head%}
+<title>Watchlist</title>
+{%endblock%} {%block body%}
+<h1>Watchlist</h1>
+{%if watchlist%} {%for item in watchlist%}
+<div class="card" style="width: 18rem">
+  <img src="item.image" class="card-img-top" alt="..." />
+  <div class="card-body">
+    <h5 class="card-title">{{item.title}}</h5>
+    <p class="card-text">{{item.description}}</p>
+    <a href="#" class="btn btn-primary">Go somewhere</a>
+  </div>
+</div>
+{%endfor%} {%else%}
+<p>Your watchlist is empty.</p>
+{%endif%} {%endblock%}

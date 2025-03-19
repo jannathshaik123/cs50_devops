@@ -53,7 +53,8 @@
     object-fit: cover;
   }
 
-  .comment-input,.bid-input {
+  .comment-input,
+  .bid-input {
     margin: 5px;
     border-radius: 20px !important;
     padding: 15px 20px;
@@ -106,7 +107,7 @@
   }
 </style>
 
-{% endblock %} {% block body %}
+{%endblock%} {%block body%}
 <h2>{{ listing.title }}</h2>
 <div class="card-deck">
   <div class="card">
@@ -121,23 +122,29 @@
       <p class="card-text"><strong>Category:</strong> {{ listing.category }}</p>
       <p class="card-text"><strong>Created by:</strong> {{ listing.owner }}</p>
 
-      {% if not listing.active %} 
-        {% if user.username == listing.max_bidder.username %}
+      {% if not listing.active %} {%if user.username == listing.max_bidder.username%}
         <small class="card-footer text-muted"
-          >Congrats, You have won the auction at ${{ max_bid }}</small>
+          >Congrats, You have won the auction at ${{ max_bid }}</small
+        >
         {% else %}
         <small class="card-footer text-muted"
           >Item Sold to {{ listing.max_bidder }} at ${{ max_bid }}</small
         >
         {% endif %}
-      {% else %}
+      {%comment%} this is for active listings {%endcomment%} 
+      {% else%} 
+        {%comment%} this is for owners of a listing {%endcomment%} 
         {% if user.username == listing.owner.username %}
-          <a href="{% url 'close' listing.id %}" class="btn btn-primary">Close Auction</a>
-          {% if message %}
+          <form action="{% url 'auctions:close' listing.id %}" method="post">
+            {% csrf_token %}
+            <button class="btn btn-primary" type="submit">Close Auction</button>
+          </form>
+          {% comment %} {% if message %}
+            <br />
             <small class="card-footer text-muted">{{ message }}</small>
-          {% endif %}
+          {% endif %}  {% endcomment %}
         {% else %}
-          <form action="{% url 'listing' listing.id %}" method="post">
+          <form action="{% url 'auctions:listing' listing.id %}" method="post">
             {% csrf_token %}
             <div class="input-group mb-3 mt-3 container">
               <input
@@ -147,16 +154,28 @@
                 name="bid"
                 id="bid"
               />
-              <button
-                class="btn btn-comment text-white "
-                type="submit"
-                id="button-addon2"
-              >
-                Bid
-              </button>
-            </div>
-        {% endif %}
-      {% endif %}
+            <button
+              class="btn btn-comment text-white"
+              type="submit"
+              id="button-addon2"
+            >
+              Bid
+            </button>
+          </div>
+            <button
+              id="watchlist"
+              name="watchlist"
+              class="btn btn-primary mx-auto"
+              type="submit"
+            >
+              Add to watchlist
+            </button>
+          </form>
+          {% if message %}
+            <br />
+            <small class="card-footer text-muted">{{ message }} {{max_bid}}</small>
+          {% endif %}
+        {% endif %} {% endif %}
     </div>
   </div>
 </div>
@@ -165,7 +184,7 @@
   <div class="comment-section">
     <h3>Comments</h3>
     <!-- New Comment Form -->
-    <form action="{% url 'listing' listing.id %}" method="post">
+    <form action="{% url 'auctions:listing' listing.id %}" method="post">
       {% csrf_token %}
       <div class="mb-4">
         <div class="d-flex gap-3">

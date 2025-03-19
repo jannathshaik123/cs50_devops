@@ -66,34 +66,58 @@ def register(request):
     
 @login_required(login_url="/login")    
 def listing(request, listing_id):
+    message = None
     listing = AuctionListing.objects.get(pk=listing_id)
     if request.method == "POST":
         if "comment" in request.POST:
             text = request.POST["comment"]
             Comment.objects.create(text=text, user=request.user, item=listing)
-        elif "bid" in request.POST:
+        elif "bid" in request.POST or "watchlist" not in request.POST:
             amount = request.POST["bid"]
             if float(amount) > listing.max_bid_amount():
+                message = "Bid placed successfully at"
                 listing.max_bid = amount
                 listing.max_bidder = request.user
                 listing.save()
                 Bid.objects.create(amount=amount, bidder=request.user, item_bid_on=listing)
+            else:
+                message = "Your bid must be higher than the current bid at"
+        else:
+            Watchlist.objects.get_or_create(watcher=request.user, listing=listing)
+            return HttpResponseRedirect(reverse("watchlist"))
     return render(request, "auctions/listing.html", {
         "listing": listing,
+        "message": message,
         "max_bid": listing.max_bid_amount(),
         "user": request.user,
         "comments": Comment.objects.filter(item=listing)
     })
 
 @login_required(login_url="/login") 
-def close(request):
+def close(request, listing_id):
+    listing = AuctionListing.objects.get(pk=listing_id)
+    # try:
     if request.method == "POST":
-        listing = AuctionListing.objects.get(pk=request.POST["listing"])
-        if listing.max_bid == 0:
-            return render(request, "auctions/listing.html", {
+        # listing = AuctionListing.objects.get(pk=request.POST["listing"])
+        if listing.max_bid != 0:
+            listing.active = False
+            message = "Auction closed successfully at."
+            listing.save()
+        else:
+            message = "You cannot close an auction without any bids."
+        return render(request, "auctions/listing.html", {
                 "listing": listing,
-                "message": "You cannot close an auction without any bids.",
+                "message": message,
+                "max_bid": listing.max_bid_amount(),
+                "user": request.user,
+                "comments": Comment.objects.filter(item=listing)
             })
-        ## Add code for if there is no bids placed
-    return render(request, "auctions/index.html",
-                  {"active_listings": AuctionListing.objects.filter(active=False)})
+        
+@login_required(login_url="/login")
+def watchlist(request):
+    if request.method == "POST":
+        Watchlist.objects.get(watcher=request.user, listing=AuctionListing.objects.get(pk=request.POST["listing"])).delete()
+        return HttpResponseRedirect(reverse("watchlist"))
+    return render(request, "auctions/watchlist.html", {
+        "watchlist": Watchlist.objects.filter(watcher=request.user)
+    })
