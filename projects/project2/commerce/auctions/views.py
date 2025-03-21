@@ -124,3 +124,41 @@ def watchlist(request):
     return render(request, "auctions/watchlist.html", {
         "watchlist": Watchlist.objects.filter(watcher=request.user)
     })
+    
+@login_required(login_url="auctions/login")
+def categories(request):
+    if request.method == "POST":
+        category = Category.objects.get(id=request.POST["category"])
+        return render(request, "auctions/categories.html", {
+            "category": category,
+            "listings": AuctionListing.objects.filter(category=category
+            )
+        })  
+    return render(request, "auctions/categories.html", {
+        "categories": Category.objects.all(),
+        "category": None
+    })
+
+def create_new(request):
+    if request.method == "POST":
+        if not request.POST["title"] or not request.POST["description"] or not request.POST["starting_bid"] or not request.POST["image"] or not request.POST["categories"]:
+            return render(request, "auctions/create_new.html", {
+                "categories": Category.objects.all(),
+                "message": "Please fill out all fields."
+            })
+        title = request.POST["title"]
+        description = request.POST["description"]
+        starting_bid = request.POST["starting_bid"]
+        image = request.POST["image"]
+        selected_categories = request.POST.getlist('categories[]')
+        print(selected_categories)
+        new_listing = AuctionListing.objects.create(title=title, description=description, starting_bid=starting_bid, image=image, owner=request.user)
+        for category_id in selected_categories:
+            category = Category.objects.get(id=category_id)
+            new_listing.categories.add(category)
+        # category = Category.objects.filter(name=selected_categories[0])[0]
+        
+        return HttpResponseRedirect(reverse("auctions:index"))
+    return render(request, "auctions/create_new.html", {
+        "categories": Category.objects.all()
+    })

@@ -4,14 +4,15 @@
 <h1>Watchlist</h1>
 {%if watchlist%} {%for item in watchlist%}
 <div class="card" style="width: 18rem">
-  <img src="{{item.listing.image}}" class="card-img-top" alt="..." />
+  <img src="{{item.listing.image}}" class="card-img-top" alt="{{item.listing.title}}" />
   <div class="card-body">
-    <h5 class="card-title">{{item.listing.title}}</h5>
+    <a href="{% url 'auctions:listing' item.listing.id %}">
+    <h5 class="card-title">{{item.listing.title}}</h5></a>
     <p class="card-text">{{item.listing.description}}</p>
     <form action="{%url 'auctions:watchlist'%}" method="post">
       {%csrf_token%}
       <button
-        class="btn btn-primary"
+        class="btn btn-danger"
         type="submit"
         name="listing_id"
         value="{{item.listing.id}}"
@@ -22,6 +23,7 @@
   </div>
 </div>
 <br />
-{%endfor%} {%else%}
+{%endfor%}
+{%else%}
 <p>Your watchlist is empty.</p>
 {%endif%} {%endblock%}

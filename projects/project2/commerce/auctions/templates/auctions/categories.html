@@ -1,0 +1,32 @@
+{% extends 'auctions/layout.html' %} {% block head %}
+<title>Categories</title>
+{% endblock %} {% block body %} {% if category %}
+<h1>{{ category.name }}</h1>
+{% if listings %} {% for listing in listings %}
+<div class="card" style="width: 18rem">
+  <img src="{{listing.image}}" class="card-img-top" alt="..." />
+  <div class="card-body">
+    <h5 class="card-title">
+      <a href="{%url 'auctions:listing' listing.id %}">{{listing.title}}</a>
+    </h5>
+    <p class="card-text">{{listing.description}}</p>
+  </div>
+</div>
+<br />
+{% endfor %} {% else %}
+<p>No listings in this category.</p>
+{% endif %} {% else %}
+<h1>Categories</h1>
+{% for category in categories %}
+<form action="{% url 'auctions:categories'%}" method="post">
+  {% csrf_token %}
+  <button
+    class="btn btn-link"
+    type="submit"
+    name="category"
+    value="{{ category.id}}"
+  >
+    <h5>{{ category.name }}</h5>
+  </button>
+</form>
+{% endfor %} {% endif %} {% endblock %}
