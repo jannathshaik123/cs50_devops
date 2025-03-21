@@ -30,13 +30,16 @@
         <a class="nav-link" href="{% url 'auctions:create_new' %}">Create Listing</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'auctions:logout' %}">Log Out</a>
+        <a class="nav-link" href="{% url 'auctions:my_items' %}">My Items</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="{% url 'auctions:watchlist' %}">Watchlist</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="{% url 'auctions:categories' %}">Categories</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'auctions:logout' %}">Log Out</a>
       </li>
       {% else %}
       <li class="nav-item">

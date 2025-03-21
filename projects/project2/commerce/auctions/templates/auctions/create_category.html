@@ -1,0 +1,20 @@
+{% extends 'auctions/layout.html' %} {% block head %}
+<title>Create New Category</title>
+{% endblock %} {% block body %}
+<h1>Create New Category</h1>
+{% if message %}
+<div>{{ message }}</div>
+{% endif %}
+<form action="{% url 'auctions:create_category' %}" method="post">
+  {% csrf_token %}
+  <div class="form-group">
+    <input
+      class="form-control"
+      type="text"
+      name="category"
+      placeholder="Category Name"
+    />
+  </div>
+  <input class="btn btn-primary" type="submit" value="Create Category" />
+</form>
+{% endblock %}

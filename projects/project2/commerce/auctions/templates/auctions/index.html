@@ -23,7 +23,7 @@
         <strong>Starting Price:</strong> ${{ active_listing.starting_bid }}
       </p>
       <p class="card-text">
-        <strong>Category:</strong> {{ active_listing.category }}
+        <strong>Category:</strong> {%for cat in active_listing.category.all %}{{cat}}, {%endfor%}
       </p>
       <p class="card-text">
         <strong>Created by:</strong> {{ active_listing.owner }}

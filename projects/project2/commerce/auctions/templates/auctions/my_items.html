@@ -1,0 +1,18 @@
+{% extends 'auctions/layout.html' %} {% block head %}
+<title>My Listings</title>
+{% endblock %} {% block body %}
+<h1>My Listings</h1>
+{% if listings %} {% for listing in listings %}
+<div class="card" style="width: 18rem">
+  <img src="{{listing.image}}" class="card-img-top" alt="..." />
+  <div class="card-body">
+    <h5 class="card-title">
+      <a href="{%url 'auctions:listing' listing.id %}">{{listing.title}}</a>
+    </h5>
+    <p class="card-text">{{listing.description}}</p>
+  </div>
+</div>
+<br />
+{% endfor %} {% else %}
+<p>No listings found.</p>
+{% endif %} {% endblock %}

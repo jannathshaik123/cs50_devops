@@ -117,7 +117,6 @@ def close(request, listing_id):
         
 @login_required(login_url="auctions/login")
 def watchlist(request):
-    print(request.user)
     if request.method == "POST":
         Watchlist.objects.get(watcher=request.user, listing=AuctionListing.objects.get(pk=request.POST["listing_id"])).delete()
         return HttpResponseRedirect(reverse("auctions:watchlist"))
@@ -128,7 +127,10 @@ def watchlist(request):
 @login_required(login_url="auctions/login")
 def categories(request):
     if request.method == "POST":
-        category = Category.objects.get(id=request.POST["category"])
+        try:
+            category = Category.objects.get(id=request.POST["category"])
+        except ValueError:
+            category = Category.objects.get(name=request.POST["category"])  
         return render(request, "auctions/categories.html", {
             "category": category,
             "listings": AuctionListing.objects.filter(category=category
@@ -150,15 +152,31 @@ def create_new(request):
         description = request.POST["description"]
         starting_bid = request.POST["starting_bid"]
         image = request.POST["image"]
-        selected_categories = request.POST.getlist('categories[]')
-        print(selected_categories)
+        selected_categories = request.POST.getlist('categories')
+        print(f"this the selectedcategories: {selected_categories}")
         new_listing = AuctionListing.objects.create(title=title, description=description, starting_bid=starting_bid, image=image, owner=request.user)
-        for category_id in selected_categories:
-            category = Category.objects.get(id=category_id)
-            new_listing.categories.add(category)
-        # category = Category.objects.filter(name=selected_categories[0])[0]
+        category = Category.objects.filter(id__in=selected_categories)
+        print(f"this the category: {category}")
+        new_listing.category.set(category)
         
         return HttpResponseRedirect(reverse("auctions:index"))
     return render(request, "auctions/create_new.html", {
         "categories": Category.objects.all()
+    })
+
+def create_category(request):
+    if request.method == "POST":
+        print(request.POST)
+        if request.POST["category"] == "":
+            return render(request, "auctions/create_category.html", {
+                "message": "Please fill out all fields."
+            })
+        category = request.POST["category"]
+        Category.objects.create(name=category)
+        return HttpResponseRedirect(reverse("auctions:categories"), )
+    return render(request, "auctions/create_category.html")
+
+def my_items(request):
+    return render(request, "auctions/my_items.html", {
+        "listings": AuctionListing.objects.filter(max_bidder=request.user, active=False)
     })

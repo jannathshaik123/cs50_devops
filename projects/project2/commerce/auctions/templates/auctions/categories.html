@@ -1,6 +1,8 @@
 {% extends 'auctions/layout.html' %} {% block head %}
 <title>Categories</title>
-{% endblock %} {% block body %} {% if category %}
+{% endblock %} {% block body %} 
+<a href="{% url 'auctions:create_category' %}">Add New Category</a>
+{% if category %}
 <h1>{{ category.name }}</h1>
 {% if listings %} {% for listing in listings %}
 <div class="card" style="width: 18rem">

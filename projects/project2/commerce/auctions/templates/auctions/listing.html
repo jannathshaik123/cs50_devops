@@ -119,7 +119,9 @@
     <div class="card-body">
       <p class="card-text">{{ listing.description }}</p>
       <p class="card-text"><strong>Price:</strong> ${{ max_bid }}</p>
-      <p class="card-text"><strong>Category:</strong> {{ listing.category }}</p>
+
+      <p class="card-text"><strong>Category:</strong> 
+        {%for cat in listing.category.all %}{{cat}}, {%endfor%} </p>
       <p class="card-text"><strong>Created by:</strong> {{ listing.owner }}</p>
 
       {% if not listing.active %} {%if user.username == listing.max_bidder.username%}
