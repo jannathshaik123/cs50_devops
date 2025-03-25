@@ -141,10 +141,10 @@
             {% csrf_token %}
             <button class="btn btn-primary" type="submit">Close Auction</button>
           </form>
-          {% comment %} {% if message %}
+          {% if message %}
             <br />
             <small class="card-footer text-muted">{{ message }}</small>
-          {% endif %}  {% endcomment %}
+          {% endif %}
         {% else %}
           <form action="{% url 'auctions:listing' listing.id %}" method="post">
             {% csrf_token %}
