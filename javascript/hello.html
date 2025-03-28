@@ -5,18 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Hello</title>
     <script>
-      function hello() {
-        const heading = document.querySelector("h1");
-        if (heading.innerHTML === "GoodBye, JavaScript!") {
-          heading.innerHTML = "Hello, world!";
-        } else {
-          heading.innerHTML = "GoodBye, JavaScript!";
-        }
-      }
+      document.addEventListener("DOMContentLoaded", function() {
+        document.querySelector("form").onsubmit = function(){
+          const name = document.querySelector("#name").value;
+          alert(`Hello, ${name}`);
+        }; // When form is submitted
+      });
     </script>
   </head>
   <body>
     <h1>Hello, world!</h1>
-    <button onclick="hello()">Say hello</button>
+    <form>
+      <input autofocus id="name" placeholder="Name" type="text"/>
+      <input type="submit" value="Submit"/>
+    </form>
   </body>
 </html>

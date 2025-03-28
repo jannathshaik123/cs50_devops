@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tasks</title>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        //By default, submit button is disabled
+        document.querySelector("#submit").disabled = true;
+        // Enable the submit button when the input field is not empty
+        document.querySelector("#task").onkeyup = () => {
+          document.querySelector("#submit").disabled =
+            document.querySelector("#task").value.length === 0;
+        };
+        // Add event listener to the form
+        document.querySelector("form").onsubmit = () => {
+          const task = document.querySelector("#task").value;
+          console.log(task);
+          // Create a new list item
+          const li = document.createElement("li");
+          li.innerHTML = task;
+          // Append the new list item to the tasks list
+          document.querySelector("#tasks").append(li);
+          // Clear the input field
+          document.querySelector("#task").value = "";
+          // Disable the submit button again
+          document.querySelector("#submit").disabled = true;
+          //Stop the form from submitting
+          return false;
+        };
+      });
+    </script>
+  </head>
+  <body>
+    <h1>Tasks</h1>
+    <ul id="tasks">
+      <!-- Example tasks, these will be replaced by user input -->
+    </ul>
+    <form>
+      <input autofocus id="task" placeholder="New Task" type="text" />
+      <input id="submit" type="submit" value="Add Task" />
+    </form>
+  </body>
+</html>

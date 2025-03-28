@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Currency Exchange</title>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Add event listener to the form
+        document.querySelector("form").onsubmit = () => {
+          fetch(
+            "https://api.exchangeratesapi.io/latest?base=USD&access_key=c6674def7cb892bb749070a773461e76"
+          )
+            .then((response) => response.json())
+            .then((data) => {
+              // Get the exchange rate for the specified currency
+              const currency = document
+                .querySelector("#currency")
+                .value.toUpperCase();
+              const rate = data.rates[currency];
+              // Check if the currency is valid
+              if (rate === undefined) {
+                document.querySelector("#result").innerHTML =
+                  "Invalid currency";
+                return false;
+              } else {
+                document.querySelector(
+                  "#result"
+                ).innerHTML = `1 USD = ${rate.toFixed(3)} ${currency}`;
+              }
+            })
+            .catch((error) => {
+              console.error("Error fetching exchange rates:", error);
+              document.querySelector("#result").innerHTML =
+                "Error fetching exchange rates";
+            });
+          return false;
+        };
+        // Fetch exchange rates when the page loads
+      });
+    </script>
+  </head>
+  <body>
+    <form>
+      <input autofocus id="currency" placeholder="Currency" type="text" />
+      <input id="submit" type="submit" value="Convert" />
+    </form>
+    <div id="result"></div>
+  </body>
+</html>

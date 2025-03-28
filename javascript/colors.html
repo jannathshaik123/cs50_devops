@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            //Change font of h1 to red, green, or blue when the corresponding button is clicked
+            document.querySelector("select").onchange = (function() {
+                document.querySelector("#heading").style.color = this.value;
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1 id="heading">Hello, world!</h1>
+    <select>
+        <option value="black">Black</option>
+        <option value="red">Red</option>
+        <option value="green">Green</option>
+        <option value="blue">Blue</option>
+        <option value="yellow">Yellow</option>
+        <option value="purple">Purple</option>
+        <option value="orange">Orange</option>
+    </select>
+</body>
+</html>
