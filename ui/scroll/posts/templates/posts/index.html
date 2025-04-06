@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Posts</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+
+      #posts {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+      }
+
+      .post {
+        background-color: #f4f4f4;
+        border-radius: 5px;
+        padding: 20px;
+        margin-bottom: 20px;
+        width: 80%;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+    </style>
+    <script>
+      let counter = 1; // Counter for the number of posts loaded
+
+      //Load 20 posts at a time
+      const quantity = 20;
+
+      document.addEventListener("DOMContentLoaded", load);
+
+      window.addEventListener("scroll", () => {
+        // Check if the user has scrolled to the bottom of the page
+        if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+          load(); // Load more posts when scrolled to the bottom
+        }
+      });
+
+      function load() {
+        const start = counter;
+        const end = counter + quantity - 1; // Calculate the end index for the posts to load
+        counter = end + 1; // Update the counter for the next load
+
+        fetch(`/posts?start=${start}&end=${end}`)
+          .then((response) => response.json())
+          .then((data) => {
+            data.posts.forEach(add_post);
+          });
+      }
+
+      function add_post(contents) {
+        const post = document.createElement("div");
+        post.className = "post";
+        post.innerHTML = contents;
+
+        document.querySelector("#posts").append(post); // Append the new posts to the containwe
+      }
+    </script>
+  </head>
+  <body>
+    <div id="posts"></div>
+  </body>
+</html>
