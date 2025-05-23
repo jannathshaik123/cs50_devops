@@ -5,6 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Posts</title>
     <style>
+      @keyframes hide {
+        0% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+        }
+      }
+
+
       body {
         font-family: Arial, sans-serif;
         margin: 0;
@@ -25,6 +35,10 @@
         margin-bottom: 20px;
         width: 80%;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        animation-name: hide;
+        animation-duration: 2s;
+        animation-fill-mode: forwards;
+        animation-play-state: paused;
       }
     </style>
     <script>
@@ -42,6 +56,16 @@
         }
       });
 
+      document.addEventListener('click', event => {
+        const element = event.target;
+        if (element.className === "hide") {
+          element.parentElement.style.animationPlayState =  'running';
+          element.parentElement.addEventListener('animationend', () => {
+            element.parentElement.remove();
+          });
+        }// Hide the post when the button is clicked
+      });
+
       function load() {
         const start = counter;
         const end = counter + quantity - 1; // Calculate the end index for the posts to load
@@ -57,7 +81,7 @@
       function add_post(contents) {
         const post = document.createElement("div");
         post.className = "post";
-        post.innerHTML = contents;
+        post.innerHTML = `${contents} <button class="hide">Hide</button>`;
 
         document.querySelector("#posts").append(post); // Append the new posts to the containwe
       }
