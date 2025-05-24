@@ -8,12 +8,26 @@
       @keyframes hide {
         0% {
           opacity: 1;
+          height: 100;
+          padding: 20px;
+          margin-bottom: 10px;
+          line-height: 100%;
+        }
+        75% {
+          opacity: 0;
+          height: 100;
+          padding: 20px;
+          margin-bottom: 10px;
+          line-height: 100%;
         }
         100% {
           opacity: 0;
+          height: 0px;
+          padding: 0px;
+          margin-bottom: 0px;
+          line-height: 0%;
         }
       }
-
 
       body {
         font-family: Arial, sans-serif;
@@ -56,14 +70,14 @@
         }
       });
 
-      document.addEventListener('click', event => {
+      document.addEventListener("click", (event) => {
         const element = event.target;
         if (element.className === "hide") {
-          element.parentElement.style.animationPlayState =  'running';
-          element.parentElement.addEventListener('animationend', () => {
+          element.parentElement.style.animationPlayState = "running";
+          element.parentElement.addEventListener("animationend", () => {
             element.parentElement.remove();
           });
-        }// Hide the post when the button is clicked
+        } // Hide the post when the button is clicked
       });
 
       function load() {
