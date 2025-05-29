@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>React</title>
+    <title>Counter</title>
     <script
       crossorigin
       src="https://unpkg.com/react@18/umd/react.development.js"
@@ -21,11 +21,15 @@
         return <h1>Hello, {props.name}</h1>;
       }
       function App() {
+        const [count, setCount] = React.useState(0);
+
+        function updateCount() {
+          setCount(count + 1);
+        }
         return (
           <div>
-            <Header name="harry" />
-            <Header name="ron" />
-            <Header name="hermoine" />
+            <div>{count}</div>
+            <button onClick={updateCount}>Increment</button>
           </div>
         );
       }
