@@ -32,14 +32,12 @@ function compose_email() {
       body: document.querySelector('#compose-body').value
     };
 
-    // Send the email using fetch API
     fetch('/emails', {
       method: 'POST',
       body: JSON.stringify(emailData)
     })
     .then(response => response.json())
     .then(result => {
-      // Handle the result of sending the email
       console.log(result);
       alert(`Email sent to ${emailData.recipients}`);
       load_mailbox('sent');
@@ -63,6 +61,11 @@ function load_mailbox(mailbox) {
   .then(emails => {
     // Print emails
     console.log(emails);
-    // ... do something else with emails ...
+    emails.forEach(email => {
+      const emailElement = document.createElement('div');
+      emailElement.className = 'email-item';
+      emailElement.innerHTML = `<span class="border border-secondary rounded-3"><strong>${email.sender}</strong> - ${email.subject} <span class="email-date">${email.timestamp}</span></span>`;
+      document.querySelector('#emails-view').append(emailElement);
     });
+});
 }
