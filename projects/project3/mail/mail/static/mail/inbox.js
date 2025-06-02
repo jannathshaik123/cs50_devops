@@ -113,6 +113,26 @@ function archive_email(email_id, archive) {
   window.location.reload();
 }
 
+function reply_email(email_id) {
+  // Fetch the email details
+  fetch("/emails/" + email_id)
+    .then((response) => response.json())
+    .then((email) => {
+      // Show compose view
+      compose_email();
+
+      // Pre-fill the compose fields with the email details
+      document.querySelector("#compose-recipients").value = email.sender;
+      document.querySelector("#compose-subject").value =
+        email.subject.startsWith("Re: ")
+          ? email.subject
+          : "Re: " + email.subject;
+      document.querySelector(
+        "#compose-body"
+      ).value = `On ${email.timestamp}, ${email.sender} wrote:\n${email.body}\n\n`;
+    });
+}
+
 function load_mailbox(mailbox) {
   // Show the mailbox and hide other views
   document.querySelector("#email-view").style.display = "none";
