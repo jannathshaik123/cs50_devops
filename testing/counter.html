@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Counter</title>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        let count = 0;
+
+        const updateDisplay = () => {
+          document.querySelector("h1").textContent = count;
+        };
+
+        document
+          .querySelector("#increment")
+          .addEventListener("click", function () {
+            count++;
+            updateDisplay();
+          });
+
+        document
+          .querySelector("#decrement")
+          .addEventListener("click", function () {
+            count--;
+            updateDisplay();
+          });
+
+        // Initial display
+        updateDisplay();
+      });
+    </script>
+  </head>
+  <body>
+    <h1>0</h1>
+    <button id="increment">+</button>
+    <button id="decrement">-</button>
+  </body>
+</html>

@@ -1,5 +1,5 @@
 from django.test import TestCase, Client
-
+from django.db import models
 from .models import Airport, Flight, Passenger
 # Create your tests here.
 
@@ -36,3 +36,46 @@ class FlightTests(TestCase):
         
         flight = Flight.objects.get(origin__code="AAA", destination__code="AAA")
         self.assertFalse(flight.is_valid_flight())
+        
+    def test_index(self):
+        """Test the index view"""
+        client = Client()
+        response = client.get('/flights/')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['flights'].count(), 3)
+        
+    def test_valid_flight_detail(self):
+        """Test the flight detail view"""
+        client = Client()
+        flight = Flight.objects.get(origin__code="AAA", destination__code="BBB")
+        response = client.get(f'/flights/{flight.id}')
+        self.assertEqual(response.status_code, 200)
+        
+    def test_invalid_flight_detail(self):
+        """Test the flight detail view with an invalid flight ID"""
+        client = Client()
+        max_flight_id = Flight.objects.aggregate(models.Max('id'))['id__max']
+        
+        response = client.get(f'/flights/{max_flight_id + 1}')
+        self.assertEqual(response.status_code, 404) # Assuming 500 for invalid flight ID, adjust as needed
+        
+    def test_flight_passengers(self):
+        """Test the flight passengers view"""
+        client = Client()
+        flight = Flight.objects.get(origin__code="AAA", destination__code="BBB")
+        passenger1 = Passenger.objects.create(first="John", last="Doe")
+        passenger2 = Passenger.objects.create(first="Jane", last="Smith")
+        flight.passengers.add(passenger1, passenger2)
+        
+        response = client.get(f'/flights/{flight.id}')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['passengers'].count(), 2)
+        
+    def test_non_passengers(self):
+        """Test the non-passengers view"""
+        client = Client()
+        flight = Flight.objects.get(origin__code="AAA", destination__code="BBB")
+        passenger1 = Passenger.objects.create(first="Jane", last="Doe")
+        response = client.get(f'/flights/{flight.id}')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['non_passengers'].count(), 1)
